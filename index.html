@@ -1,0 +1,51 @@
+<html>
+<body>
+  <!-- Libs -->
+  <script type="text/javascript" src="http://vkontakte.ru/js/api/openapi.js" charset="windows-1251"></script>
+  <script type="text/javascript" src="/jquery-1.7.1.min.js"></script>
+  <!-- <script type="text/javascript" src="/mustache.js"></script> -->
+
+
+	<section id="player">
+  	<!-- TODO iframe -->
+	</section> 
+
+	<section id="searchbox">
+  	<div id="login_button" onclick="VK.Auth.login(authInfo);"></div>
+		<form action="/" method="post" onsubmit="return searchFor(this)">
+			<input type="text" name="searchText" id="searchText" />
+			<input type="submit" value="search" />
+		</form>
+	</section>
+
+	<section id="results">
+		<!-- TODO -->
+	</section>
+
+
+
+	<script type="text/javascript">
+		VK.init({
+			apiId: 2810295
+		});
+
+		function searchFor(form){
+			
+			return false;
+		}
+
+		function authInfo(response) {
+		  if (response.session) {
+		    alert('user: '+response.session.mid);
+		  } else {
+		    VK.UI.button('login_button');
+		    alert('not auth');
+		  }
+		}
+		VK.Auth.getLoginStatus(authInfo);
+	</script>
+
+
+
+</body>
+</html>
