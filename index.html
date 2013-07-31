@@ -1,21 +1,33 @@
 <html>
+	<head>
+		<meta charset="UTF-8">
+	</head>
 <body>
   <!-- Libs -->
   <script type="text/javascript" src="http://vkontakte.ru/js/api/openapi.js" charset="windows-1251"></script>
-  <script type="text/javascript" src="/jquery-1.7.1.min.js"></script>
+  <script type="text/javascript" src="jquery-1.7.1.min.js"></script>
+  <script type="text/javascript" src="jquery-ui-1.8.4.custom.min.js"></script>
   <!-- <script type="text/javascript" src="/mustache.js"></script> -->
 
+
+  <!-- TODO activity indicator -->
 
 	<section id="player">
   	<!-- TODO iframe -->
 	</section> 
 
-	<section id="searchbox">
-  	<div id="login_button" onclick="VK.Auth.login(authInfo);"></div>
-		<form action="/" method="post" onsubmit="return searchFor(this)">
-			<input type="text" name="searchText" id="searchText" />
-			<input type="submit" value="search" />
-		</form>
+	<section>
+		<div id="vklogin">
+			Для вещания нужно авторизоваться ВКонтакте<br>
+			<div id="login_button" onclick="VK.Auth.login(authInfo);"></div>
+		</div>
+
+		<div style="display:none" id="searchbox">
+			<form action="/" method="post" onsubmit="return searchFor(this)">
+				<input type="text" name="searchText" id="searchText" />
+				<input type="submit" value="search" />
+			</form>
+		</div>
 	</section>
 
 	<section id="results">
@@ -25,24 +37,33 @@
 
 
 	<script type="text/javascript">
+		alert("asdasd 0");
 		VK.init({
-			apiId: 2810295
+			apiId: 2810295,
+			nameTransportPath: "xd_receiver.html"
 		});
 
 		function searchFor(form){
-			
+
 			return false;
 		}
 
 		function authInfo(response) {
+		  alert("asdasd");
 		  if (response.session) {
-		    alert('user: '+response.session.mid);
+		  	turnOnStreaming();
 		  } else {
 		    VK.UI.button('login_button');
-		    alert('not auth');
 		  }
 		}
 		VK.Auth.getLoginStatus(authInfo);
+
+
+		function turnOnStreaming(){
+		  	document.getElementById("vklogin").style.display = 'none';
+		  	document.getElementById("searchbox").style.display = 'inline';
+		}
+
 	</script>
 
 
