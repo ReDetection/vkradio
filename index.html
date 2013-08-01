@@ -6,38 +6,52 @@
   <!-- Libs -->
   <script type="text/javascript" src="http://vkontakte.ru/js/api/openapi.js" charset="windows-1251"></script>
   <script type="text/javascript" src="jquery-1.7.1.min.js"></script>
-  <script type="text/javascript" src="jquery-ui-1.8.4.custom.min.js"></script>
+  <!-- <script type="text/javascript" src="jquery-ui-1.8.4.custom.min.js"></script> -->
   <!-- <script type="text/javascript" src="/mustache.js"></script> -->
 
-
   <!-- TODO activity indicator -->
+		
 
-	<section id="player">
-  	<!-- TODO iframe -->
-	</section> 
+  <div id="indexpage">
+		<h1 style="align: center;">Радио ВКонтакте</h1>
+  	
+  	<h4>Искать радиостанцию:</h4>
+  	<form action="/" method="post" onsubmit="return searchFor(this);">
+			<input type="text" name="searchText" id="searchText" />
+			<input type="submit" value="search" />
+  	</form>
 
-	<section>
-		<div id="vklogin">
+  	<br>
+
+  	<div id="vklogin" style="display: none;">
 			Для вещания нужно авторизоваться ВКонтакте<br>
 			<div id="login_button" onclick="VK.Auth.login(authInfo);"></div>
-		</div>
-
-		<div style="display:none" id="searchbox">
-			<form action="/" method="post" onsubmit="return searchFor(this)">
-				<input type="text" name="searchText" id="searchText" />
-				<input type="submit" value="search" />
+  	</div>
+		
+		<div id="createbox" style="display: none;">
+			<h4>Создать радиостанцию:</h4>
+			<form action="/" method="post" onsubmit="return createRadio(this);">
+				<input type="text" name="radioname" id="radioname" />
+				<input type="submit" value="create" />
 			</form>
 		</div>
-	</section>
 
-	<section id="results">
-		<!-- TODO -->
-	</section>
+  </div>
 
+  <div id="mainpage" style="display: none;">
+  	<div id="statusLabel"><h2>Вы слушаете/вещаете радио БЛАБЛА</h2></div>
+	
+		<!-- TODO player iframe -->
+
+	  <section id="results" style="display: none;">
+	  	Результаты:
+			<!-- TODO -->
+		</section>
+	
+  </div>
 
 
 	<script type="text/javascript">
-		alert("asdasd 0");
 		VK.init({
 			apiId: 2810295,
 			nameTransportPath: "xd_receiver.html"
@@ -49,24 +63,27 @@
 		}
 
 		function authInfo(response) {
-		  alert("asdasd");
 		  if (response.session) {
-		  	turnOnStreaming();
+		  	hide("vklogin");
+		  	show("createbox");
 		  } else {
 		    VK.UI.button('login_button');
+		  	show("vklogin");
 		  }
 		}
 		VK.Auth.getLoginStatus(authInfo);
 
 
-		function turnOnStreaming(){
-		  	document.getElementById("vklogin").style.display = 'none';
-		  	document.getElementById("searchbox").style.display = 'inline';
+		function show(id){
+		  	document.getElementById(id).style.display = 'inline';
+		}
+		function hide(id){
+		  	document.getElementById(id).style.display = 'none';
 		}
 
 	</script>
 
-
+	<!-- TODO yandex metrics -->
 
 </body>
 </html>
