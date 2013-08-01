@@ -1,61 +1,62 @@
 <html>
-	<head>
-		<meta charset="UTF-8">
-	</head>
+<head>
+	<meta charset="UTF-8">
+	<script type="text/javascript" src="http://vkontakte.ru/js/api/openapi.js" charset="windows-1251"></script>
+	<script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.2.8.min.js"></script>
+</head>
 <body>
-  <!-- Libs -->
-  <script type="text/javascript" src="http://vkontakte.ru/js/api/openapi.js" charset="windows-1251"></script>
-  <script type="text/javascript" src="jquery-1.7.1.min.js"></script>
-  <!-- <script type="text/javascript" src="jquery-ui-1.8.4.custom.min.js"></script> -->
-  <!-- <script type="text/javascript" src="/mustache.js"></script> -->
 
-  <!-- TODO activity indicator -->
-		
+	<!-- TODO activity indicator -->
+	
 
-  <div id="indexpage">
+	<div id="indexpage">
 		<h1 style="align: center;">Радио ВКонтакте</h1>
-  	
-  	<h4>Искать радиостанцию:</h4>
-  	<form action="/" method="post" onsubmit="return searchFor(this);">
+		
+		<h4>Искать радиостанцию:</h4>
+		<form action="/" method="post" onsubmit="return searchFor(this);">
 			<input type="text" name="searchText" id="searchText" />
-			<input type="submit" value="search" />
-  	</form>
+			<input type="submit" value="Искать" />
+		</form>
 
-  	<br>
+		<br>
 
-  	<div id="vklogin" style="display: none;">
+		<div id="vklogin" style="display: none;">
 			Для вещания нужно авторизоваться ВКонтакте<br>
-			<div id="login_button" onclick="VK.Auth.login(authInfo);"></div>
-  	</div>
+			<div id="login_button" onclick="VK.Auth.login(authInfo, 8);"></div>
+		</div>
 		
 		<div id="createbox" style="display: none;">
-			<h4>Создать радиостанцию:</h4>
+			<h4>Для создания радиостанции введите музыкальный поисковый запрос: </h4>
 			<form action="/" method="post" onsubmit="return createRadio(this);">
-				<input type="text" name="radioname" id="radioname" />
-				<input type="submit" value="create" />
+				<input type="text" name="musicsearch" id="musicsearch" />
+				<input type="submit" value="Искать" />
 			</form>
 		</div>
 
-  </div>
+	</div>
 
-  <div id="mainpage" style="display: none;">
-  	<div id="statusLabel"><h2>Вы слушаете/вещаете радио БЛАБЛА</h2></div>
-	
+	<div id="mainpage" style="display: none;">
+		<div id="statusLabel"><h2>Вы слушаете/вещаете радио БЛАБЛА</h2></div>
+		<!-- Просто дайте слушателям эту ссылку: <input type="text" id="link" /> -->
+		
 		<!-- TODO player iframe -->
 
-	  <section id="results" style="display: none;">
-	  	Результаты:
+		<section id="results" style="display: none;">
+			Результаты:
 			<!-- TODO -->
 		</section>
-	
-  </div>
+		
+	</div>
 
 
 	<script type="text/javascript">
-		VK.init({
-			apiId: 2810295,
-			nameTransportPath: "xd_receiver.html"
-		});
+	Parse.initialize("poVULgqVbzdhjQCip2OqubuwmuyZHJHgkrYCmNAd", "FtNJgAjrsbPzLSuPP6BmQflqx17doGz1A4HhGVqP");
+	VK.init({
+		apiId: 2810295,
+		nameTransportPath: "xd_receiver.html"
+	});
+	VK.Auth.getLoginStatus(authInfo);
+		// var radioid = window.location.search.substring(1);
 
 		function searchFor(form){
 
@@ -63,27 +64,58 @@
 		}
 
 		function authInfo(response) {
-		  if (response.session) {
-		  	hide("vklogin");
-		  	show("createbox");
-		  } else {
-		    VK.UI.button('login_button');
-		  	show("vklogin");
-		  }
+			if (response.session) {
+				VK.Api.call('getUserSettings', {}, allowedSettings);
+			} else {
+				VK.UI.button('login_button');
+				show("vklogin");
+			}
 		}
-		VK.Auth.getLoginStatus(authInfo);
 
+		function allowedSettings(response){
+			if ((parseInt(response.response) & 8) > 0){
+				hide("vklogin");
+				show("createbox");
+			} else {
+				VK.UI.button('login_button');
+				show("vklogin");
+			}
+
+		}
+
+		function createRadio(form){
+			hide("indexpage");
+			VK.Api.call('audio.search', {q: form["musicsearch"].value, sort: 2}, function(r) {
+				if(r.response) {
+					console.log('Привет, ',  r.response);
+				} else {
+					console.log( this, 'that', { the: 'other' } , r);
+				}
+			});
+
+
+			show("mainpage");
+			return false;
+		}
 
 		function show(id){
-		  	document.getElementById(id).style.display = 'inline';
+			document.getElementById(id).style.display = 'inline';
 		}
 		function hide(id){
-		  	document.getElementById(id).style.display = 'none';
+			document.getElementById(id).style.display = 'none';
 		}
 
-	</script>
+		// var TestObject = Parse.Object.extend("TestObject");
+		// var testObject = new TestObject();
+		// testObject.save({foo: "bar"}, {
+		// 	success: function(object) {
+		// 	  alert("yay! it worked");
+		// 	}
+		// });
 
-	<!-- TODO yandex metrics -->
+</script>
+
+<!-- TODO yandex metrics -->
 
 </body>
 </html>
