@@ -7,11 +7,11 @@
 <body>
 
 	<!-- TODO activity indicator -->
-	
+
 
 	<div id="indexpage">
 		<h1 style="align: center;">Радио ВКонтакте</h1>
-		
+
 		<h4>Искать радиостанцию:</h4>
 		<form action="/" method="post" onsubmit="return searchFor(this);">
 			<input type="text" name="searchText" id="searchText" />
@@ -38,24 +38,25 @@
 	<div id="mainpage" style="display: none;">
 		<div id="statusLabel"><h2>Вы слушаете/вещаете радио БЛАБЛА</h2></div>
 		<!-- Просто дайте слушателям эту ссылку: <input type="text" id="link" /> -->
-		
-		<!-- TODO player iframe -->
+
+		<div id="player"></div><br>
 
 		<section id="results" style="display: none;">
 			Результаты:
-			<!-- TODO -->
+			<div id="resultslist">
+			</div>
 		</section>
-		
+
 	</div>
 
 
 	<script type="text/javascript">
-	Parse.initialize("poVULgqVbzdhjQCip2OqubuwmuyZHJHgkrYCmNAd", "FtNJgAjrsbPzLSuPP6BmQflqx17doGz1A4HhGVqP");
-	VK.init({
-		apiId: 2810295,
-		nameTransportPath: "xd_receiver.html"
-	});
-	VK.Auth.getLoginStatus(authInfo);
+		Parse.initialize("poVULgqVbzdhjQCip2OqubuwmuyZHJHgkrYCmNAd", "FtNJgAjrsbPzLSuPP6BmQflqx17doGz1A4HhGVqP");
+		VK.init({
+			apiId: 2810295,
+			nameTransportPath: "xd_receiver.html"
+		});
+		VK.Auth.getLoginStatus(authInfo);
 		// var radioid = window.location.search.substring(1);
 
 		function searchFor(form){
@@ -85,17 +86,55 @@
 
 		function createRadio(form){
 			hide("indexpage");
-			VK.Api.call('audio.search', {q: form["musicsearch"].value, sort: 2}, function(r) {
+			musicSearch(form["musicsearch"].value);
+			show("mainpage");
+			// TODO parse.com
+			return false;
+		}
+
+		function musicSearch(query){
+			hide("results");
+			VK.Api.call('audio.search', {q: query, sort: 2}, function(r) {
 				if(r.response) {
-					console.log('Привет, ',  r.response);
+					var newHTML = "<table border='0'>";
+					var len = r.response.length;
+					for (var i=1; i<len; i++) {
+				    var s = r.response[i];
+				    console.log(s.owner_id);
+				    
+					  newHTML=newHTML+"<tr><td><b>" + s.artist + "</b> — " + s.title;
+					  newHTML=newHTML+'&nbsp;<a id="listen" href="/" onclick="return justListen(\'' + trim(s.owner_id + '_' + s.aid) + '\');">Слушать</a>';
+					  newHTML=newHTML+'&nbsp;<a id="shout" href="/" onclick="return shout(\'' + trim(s.owner_id + '_' + s.aid) + '\');">Вещать</a>';
+					  newHTML=newHTML+" </td></tr>";
+					}
+					newHTML=newHTML+" </table>";
+
+					var div = document.getElementById('resultslist');
+					div.innerHTML=newHTML;
+					show("results");
+
 				} else {
-					console.log( this, 'that', { the: 'other' } , r);
+					console.log(r);
 				}
 			});
 
+		}
 
-			show("mainpage");
+		function justListen(track){
+			console.log(track);
+			var playerdiv = document.getElementById('player');
+			playerdiv.innerHTML = "<iframe src='http://player.vas3k.ru/small/#track:"+ track + "' width=630 height=130></iframe>";
 			return false;
+		}
+
+		function shout(track){
+			justListen(track);
+			// TODO send to parse.com
+			return false;
+		}
+
+		function trim(str) {
+		    return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
 		}
 
 		function show(id){
