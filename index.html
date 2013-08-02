@@ -28,7 +28,7 @@
 		<div id="createbox" style="display: none;">
 			<h4>Для создания радиостанции введите музыкальный поисковый запрос: </h4>
 			<form action="/" method="post" onsubmit="return createRadio(this);">
-				<input type="text" name="musicsearch" id="musicsearch" />
+				<input type="text" name="musicsearch" />
 				<input type="submit" value="Искать" />
 			</form>
 		</div>
@@ -42,6 +42,12 @@
 		<div id="player"></div><br>
 
 		<section id="results" style="display: none;">
+
+      <form action="/" method="post" onsubmit="return musicSearch(this['musicsearch'].value);">
+        <input type="text" name="musicsearch" id="mainpageSearchbox" />
+        <input type="submit" value="Искать" />
+      </form><br>
+
 			Результаты:
 			<div id="resultslist">
 			</div>
@@ -117,9 +123,11 @@
 
 		function createRadio(form){
 			hide("indexpage");
-			musicSearch(form["musicsearch"].value);
+      var searchQuery = form["musicsearch"].value;
+			musicSearch(searchQuery);
 			var status = document.getElementById("statusLabel");
 			status.innerHTML="Вы вещаете радио ";
+      document.getElementById("mainpageSearchbox").value = searchQuery;
 			show("mainpage");
 			
 			radioInstance = new RadioClass();
@@ -156,7 +164,7 @@
 					console.log(r);
 				}
 			});
-
+      return false;
 		}
 
 		function justListen(track){
