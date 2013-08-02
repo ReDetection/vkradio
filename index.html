@@ -36,7 +36,7 @@
 	</div>
 
 	<div id="mainpage" style="display: none;">
-		<div id="statusLabel"><h2>Вы слушаете/вещаете радио БЛАБЛА</h2></div>
+		<h2><div id="statusLabel">Вы слушаете/вещаете радио БЛАБЛА</div></h2>
 		<!-- Просто дайте слушателям эту ссылку: <input type="text" id="link" /> -->
 
 		<div id="player"></div><br>
@@ -58,6 +58,9 @@
 		});
 		VK.Auth.getLoginStatus(authInfo);
 		// var radioid = window.location.search.substring(1);
+
+    var RadioClass = Parse.Object.extend("Radio");
+    var radioInstance;
 
 		function searchFor(form){
 
@@ -87,8 +90,17 @@
 		function createRadio(form){
 			hide("indexpage");
 			musicSearch(form["musicsearch"].value);
+			var status = document.getElementById("statusLabel");
+			status.innerHTML="Вы вещаете радио ";
 			show("mainpage");
-			// TODO parse.com
+			
+			radioInstance = new RadioClass();
+			radioInstance.save({author: VK.Auth.getSession().mid}, {
+				success: function(object) {
+				  status.innerHTML = status.innerHTML + object.id;
+				}
+			});
+
 			return false;
 		}
 
@@ -100,7 +112,6 @@
 					var len = r.response.length;
 					for (var i=1; i<len; i++) {
 				    var s = r.response[i];
-				    console.log(s.owner_id);
 				    
 					  newHTML=newHTML+"<tr><td><b>" + s.artist + "</b> — " + s.title;
 					  newHTML=newHTML+'&nbsp;<a id="listen" href="/" onclick="return justListen(\'' + trim(s.owner_id + '_' + s.aid) + '\');">Слушать</a>';
@@ -129,28 +140,19 @@
 
 		function shout(track){
 			justListen(track);
-			// TODO send to parse.com
+			radioInstance.save({track: track},{});
 			return false;
 		}
 
 		function trim(str) {
 		    return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
 		}
-
 		function show(id){
 			document.getElementById(id).style.display = 'inline';
 		}
 		function hide(id){
 			document.getElementById(id).style.display = 'none';
 		}
-
-		// var TestObject = Parse.Object.extend("TestObject");
-		// var testObject = new TestObject();
-		// testObject.save({foo: "bar"}, {
-		// 	success: function(object) {
-		// 	  alert("yay! it worked");
-		// 	}
-		// });
 
 </script>
 
