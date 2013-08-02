@@ -13,7 +13,7 @@
 		<h1 style="align: center;">Радио ВКонтакте</h1>
 
 		<h4>Искать радиостанцию:</h4>
-		<form action="/" method="post" onsubmit="return searchFor(this);">
+		<form action="/" method="post" onsubmit="return searchRadio(this);">
 			<input type="text" name="searchText" id="searchText" />
 			<input type="submit" value="Искать" />
 		</form>
@@ -61,11 +61,7 @@
 
     var RadioClass = Parse.Object.extend("Radio");
     var radioInstance;
-
-		function searchFor(form){
-
-			return false;
-		}
+    var nowPlaying = "";
 
 		function authInfo(response) {
 			if (response.session) {
@@ -84,8 +80,40 @@
 				VK.UI.button('login_button');
 				show("vklogin");
 			}
-
 		}
+
+    function searchRadio(form){
+      var query = new Parse.Query(RadioClass);
+      query.get(form["searchText"].value,{
+        success: function(instance) {
+          radioInstance = instance;
+          
+          hide("indexpage");
+          document.getElementById("statusLabel").innerHTML="Вы слушаете радио " + instance.id;
+          show("mainpage");
+
+          renewPlayer();
+        },
+        error: function(object, error) {
+          form["searchText"].value="";
+        }
+      });
+
+      return false;
+    }
+
+    function renewPlayer(){
+      radioInstance.fetch({
+        success: function(instance) {
+          var track = instance.get("track");
+          if (track.localeCompare(nowPlaying)!=0){
+             justListen(track);
+          }
+        }
+      });
+
+      setTimeout(renewPlayer,10000);
+    }
 
 		function createRadio(form){
 			hide("indexpage");
@@ -132,9 +160,9 @@
 		}
 
 		function justListen(track){
-			console.log(track);
 			var playerdiv = document.getElementById('player');
 			playerdiv.innerHTML = "<iframe src='http://player.vas3k.ru/small/#track:"+ track + "' width=630 height=130></iframe>";
+      nowPlaying = track;
 			return false;
 		}
 
