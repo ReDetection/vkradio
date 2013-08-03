@@ -43,7 +43,7 @@
 
 		<section id="results" style="display: none;">
 
-      <form action="/" method="post" onsubmit="return musicSearch(this['musicsearch'].value);">
+      <form action="/" method="post" onsubmit="return musicSearchByQuery(this['musicsearch'].value);">
         <input type="text" name="musicsearch" id="mainpageSearchbox" />
         <input type="submit" value="Искать" />
       </form><br>
@@ -54,6 +54,16 @@
 		</section>
 
 	</div>
+
+  <div id="captcha_dialog" style="display: none;">
+    <img id="captcha_image" />
+    <form action="/" method="post" onsubmit="return musicSearchByQueryWithCaptcha(this['musicsearch'].value, this['captcha_sid'].value, this['captcha_key'].value);">
+      <input id="captcha_sid" type="hidden" name="captcha_sid" />
+      <input id="captcha_musicsearch" type="hidden" name="musicsearch" />
+      <input type="text" name="captcha_key" />
+      <input type="submit" value="Отправить" />
+    </form>
+  </div>
 
 
 	<script type="text/javascript">
@@ -131,7 +141,7 @@
 		function createRadio(form){
 			hide("indexpage");
       var searchQuery = form["musicsearch"].value;
-			musicSearch(searchQuery);
+			musicSearchByQuery(searchQuery);
 			var status = document.getElementById("statusLabel");
 			status.innerHTML="Вы вещаете радио ";
       document.getElementById("mainpageSearchbox").value = searchQuery;
@@ -148,9 +158,22 @@
 			return false;
 		}
 
-		function musicSearch(query){
+    function musicSearchByQuery(query) {
+      return musicSearch({q: query, sort: 2});
+    }
+
+    function musicSearchByQueryWithCaptcha(query, sid, code) {
+      /* Hide captcha dialog. */
+      var captcha_dialog = document.getElementById('captcha_dialog');
+      captcha_dialog.style.display = 'none';
+
+      return musicSearch({q: query, sort: 2, captcha_sid: sid, captcha_key: code});
+    };
+
+		function musicSearch(params) {
 			hide("results");
-			VK.Api.call('audio.search', {q: query, sort: 2}, function(r) {
+
+			VK.Api.call('audio.search', params, function(r) {
 				if(r.response) {
 					var newHTML = "<table border='0'>";
 					var len = r.response.length;
@@ -169,6 +192,22 @@
 					show("results");
 
 				} else {
+          if (r.error.error_code == 14) {
+            /* Set captcha image */
+            var img = document.getElementById('captcha_image');
+            img.src = r.error.captcha_img;
+
+            /* Set form values */
+            var captcha_sid_input = document.getElementById('captcha_sid');
+            captcha_sid_input.value = r.error.captcha_sid;
+
+            var captcha_musicsearch = document.getElementById('captcha_musicsearch');
+            captcha_musicsearch.value = params.q;
+
+            /* Show captcha dialog. */
+            var captcha_dialog = document.getElementById('captcha_dialog');
+            captcha_dialog.style.display = '';
+          }
 					console.log(r);
 				}
 			});
