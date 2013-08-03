@@ -5,7 +5,7 @@ Simple project with aim to share currently playing music with friends over inter
 After some failures with implementing via real shoutcast radio, I've decided to implement it in easiest way, so here it is.
 
 ## Usage
-To shout with vkradio just open <github.io URL>, login via VK.com and put your search request in the search bar at the bottom and hit return. On the new page there will be a link (you can share it with your listeners) and search results at the bottom. First link near every row will play audiotrack only for you, second one — for you and your listeners.
+To shout with vkradio just open [http://redetection.github.io/vkradio/](http://redetection.github.io/vkradio/), login via VK.com and put your search request in the search bar at the bottom and hit return. On the new page there will be a link (you can share it with your listeners) and search results at the bottom. First link near every row will play audiotrack only for you, second one — for you and your listeners.
 
 If you're listener, so just open the link you have in any modern browser and enjoy.
 
