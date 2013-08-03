@@ -5,9 +5,9 @@ Simple project with aim to share currently playing music with friends over inter
 After some failures with implementing via real shoutcast radio, I've decided to implement it in easiest way, so here it is.
 
 ## Usage
-To shout with vkradio just open <github.io URL>, login via VK.com and put your search request in the search bar at the bottom and hit return. New page will open with unique radio id (you can share it with your listeners) and search results at the bottom. First link near every row will play audiotrack only for you, second one — for you and your listeners.
+To shout with vkradio just open <github.io URL>, login via VK.com and put your search request in the search bar at the bottom and hit return. On the new page there will be a link (you can share it with your listeners) and search results at the bottom. First link near every row will play audiotrack only for you, second one — for you and your listeners.
 
-If you're listener, so you should put given id in the first box on instead of second, hit return and enjoy.
+If you're listener, so just open the link you have in any modern browser and enjoy.
 
 
 ## License
@@ -20,7 +20,6 @@ Distributed under the GNU LGPL
 
 If you want to contribute just fork the repository, work on the code and submit a pull request through Github. Tasks I need to do:
 
-* ability to share direct link to listeners!!!
 * design. at least twitter bootstrap, it's nice enough
 * 'back' button to the welcome page
 * localization
@@ -28,6 +27,11 @@ If you want to contribute just fork the repository, work on the code and submit 
 * share link to the VK.com status, twitter, other social networks?
 * share currently playing track to the music status field in VK.com
 * what's with last.fm? maybe player.vas3k.ru will notify last.fm if user is logged in there?
+* should process errors from parse.com and vkontakte
+* playlists support
+* count listeners?
+* change url in omnibox to follow page purpose
+* remove radiosearch from the main page?
 
 
 ## Thanks

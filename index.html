@@ -13,7 +13,7 @@
 		<h1 style="align: center;">Радио ВКонтакте</h1>
 
 		<h4>Искать радиостанцию:</h4>
-		<form action="/" method="post" onsubmit="return searchRadio(this);">
+		<form action="/" method="post" onsubmit="return searchRadio(this[searchText].value);">
 			<input type="text" name="searchText" id="searchText" />
 			<input type="submit" value="Искать" />
 		</form>
@@ -27,7 +27,7 @@
 		
 		<div id="createbox" style="display: none;">
 			<h4>Для создания радиостанции введите музыкальный поисковый запрос: </h4>
-			<form action="/" method="post" onsubmit="return createRadio(this);">
+			<form action="/" method="post" onsubmit="createRadio(this); return false;">
 				<input type="text" name="musicsearch" />
 				<input type="submit" value="Искать" />
 			</form>
@@ -37,7 +37,7 @@
 
 	<div id="mainpage" style="display: none;">
 		<h2><div id="statusLabel">Вы слушаете/вещаете радио БЛАБЛА</div></h2>
-		<!-- Просто дайте слушателям эту ссылку: <input type="text" id="link" /> -->
+		Просто дайте слушателям эту ссылку: <input type="text" id="link" size="50" onClick="this.select();" /> 
 
 		<div id="player"></div><br>
 
@@ -62,13 +62,19 @@
 			apiId: 2810295,
 			nameTransportPath: "xd_receiver.html"
 		});
-		VK.Auth.getLoginStatus(authInfo);
-		// var radioid = window.location.search.substring(1);
 
     var RadioClass = Parse.Object.extend("Radio");
     var radioInstance;
     var nowPlaying = "";
+    var radioid = window.location.search.substring(1).split("/")[0];
 
+    if(radioid && radioid.length==10){
+      document.getElementById("searchText").value=radioid;
+      searchRadio(radioid);
+    } 
+
+    VK.Auth.getLoginStatus(authInfo);
+  
 		function authInfo(response) {
 			if (response.session) {
 				VK.Api.call('getUserSettings', {}, allowedSettings);
@@ -88,20 +94,21 @@
 			}
 		}
 
-    function searchRadio(form){
+    function searchRadio(queryString){
       var query = new Parse.Query(RadioClass);
-      query.get(form["searchText"].value,{
+      query.get(queryString,{
         success: function(instance) {
           radioInstance = instance;
           
           hide("indexpage");
           document.getElementById("statusLabel").innerHTML="Вы слушаете радио " + instance.id;
+          document.getElementById("link").value="http://vkradio.github.io/?" + instance.id;
           show("mainpage");
 
           renewPlayer();
         },
         error: function(object, error) {
-          form["searchText"].value="";
+           document.getElementById("searchText").value="";
         }
       });
 
@@ -134,6 +141,7 @@
 			radioInstance.save({author: VK.Auth.getSession().mid}, {
 				success: function(object) {
 				  status.innerHTML = status.innerHTML + object.id;
+          document.getElementById("link").value="http://vkradio.github.io/?" + object.id;
 				}
 			});
 
