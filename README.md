@@ -21,7 +21,7 @@ Distributed under the GNU LGPL
 If you want to contribute just fork the repository, work on the code and submit a pull request through Github. Tasks I need to do:
 
 * playlists support!!!
-* design. at least twitter bootstrap, it's nice enough
+* design
 * 'back' button to the welcome page
 * localization
 * a better code, perhaps in OOP style
