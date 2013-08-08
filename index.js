@@ -89,7 +89,7 @@ function createRadio(form){
   radioInstance.save({author: VK.Auth.getSession().mid}, {
     success: function(object) {
       status.innerHTML = status.innerHTML + object.id;
-      document.getElementById("link").value = radioLocation + "/?" + object.id;
+      document.getElementById("link").value = radioLocation + "?" + object.id;
     }
   });
 
