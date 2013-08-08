@@ -1,10 +1,10 @@
 var radioLocation = location.protocol + '//' + location.host;
-if (location.host.localeCompare("redetection.github.io")==0){
+if (location.host.localeCompare('redetection.github.io')==0){
   radioLocation = radioLocation + '/vkradio/';
 }
 var RadioClass ;
 var radioInstance;
-var nowPlaying = "";
+var nowPlaying = " ";
 var radioid = window.location.search.substring(1).split("/")[0];
   
 $(document).ready(function () {
@@ -17,7 +17,6 @@ $(document).ready(function () {
   RadioClass = Parse.Object.extend("Radio");
   
   if(radioid && radioid.length==10){
-    document.getElementById("searchText").value=radioid;
     searchRadio(radioid);
   } 
 
@@ -57,7 +56,7 @@ function searchRadio(queryString){
       renewPlayer();
     },
     error: function(object, error) {
-       document.getElementById("searchText").value="";
+       alert("Такое радио не существовало");
     }
   });
 

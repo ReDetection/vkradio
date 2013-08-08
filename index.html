@@ -17,19 +17,6 @@
         <div id="indexpage">
           <h1 class="text-center page-header">Радио ВКонтакте</h1>
 
-          <div class="row">
-            <form action="/" method="post" onsubmit="return searchRadio(this[searchText].value);">
-              <fieldset class="col-lg-4">
-                <div class="form-group">
-                  <label for="searchText">Поиск радиостанции:</label>
-                  <input type="text" name="searchText" id="searchText" class="form-control" />
-                </div>
-
-                <button type="submit" class="btn btn-default btn-small">Искать</button>
-              </fieldset>
-            </form>
-          </div>
-
           <div id="vklogin" class="hide row row-padding-top">
             <p>Для вещания нужно авторизоваться ВКонтакте</p>
             <div id="login_button" onclick="VK.Auth.login(authInfo, 8);"></div>

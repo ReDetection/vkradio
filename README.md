@@ -21,6 +21,7 @@ Distributed under the GNU LGPL
 If you want to contribute just fork the repository, work on the code and submit a pull request through Github. Tasks I need to do:
 
 * playlists support!!!
+* play music from point where everyone is listening now (it's important when new listener connects because new track can replace playing one right in the middle of playing)
 * design
 * 'back' button to the welcome page
 * localization
@@ -31,9 +32,7 @@ If you want to contribute just fork the repository, work on the code and submit 
 * should process errors from parse.com and vkontakte
 * count listeners?
 * change url in omnibox to follow page purpose
-* remove radiosearch from the main page?
 * music recomendation from listeners would be a nice feature
-* play music from point where everyone is listening now (it's important when new listener connects because new track can replace playing one right in the middle of playing)
 * fetch playlists from vk, playlist from player.vas3k.ru
 * generate playlist by recomendations on last.fm from already played tracks 
 * maybe somewhen in the future merge this project into player.vas3k.ru
