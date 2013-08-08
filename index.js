@@ -1,4 +1,7 @@
 var radioLocation = location.protocol + '//' + location.host;
+if (location.host.localeCompare("redetection.github.io")==0){
+  radioLocation = radioLocation + '/vkradio/';
+}
 var RadioClass ;
 var radioInstance;
 var nowPlaying = "";
